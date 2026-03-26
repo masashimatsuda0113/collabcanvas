@@ -13,6 +13,7 @@ on:
 permissions:
   contents: read          # コードを読む権限
   pull-requests: write    # PRにコメントを書く権限
+  id-token: write         # OIDC認証に必要
 
 jobs:
   review:

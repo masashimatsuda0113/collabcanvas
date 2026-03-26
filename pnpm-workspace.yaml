@@ -1,3 +1,7 @@
+# 単一パッケージのリポでも workspace ファイルがあると packages が必須
+packages:
+  - "."
+
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
