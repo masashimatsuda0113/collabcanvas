@@ -15,6 +15,7 @@ permissions:
   contents: write         # コードを修正する権限
   pull-requests: write    # PRにコメント・修正コミットする権限
   issues: read            # Issueを読む権限
+  id-token: write         # OIDC認証に必要
 
 jobs:
   respond:
