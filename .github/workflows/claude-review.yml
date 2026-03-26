@@ -1,0 +1,44 @@
+# ============================================
+# 📝 PR自動レビュー
+# PRを作成・更新するたびに、Claudeが自動でコードレビューする
+# ============================================
+name: Claude Code Review
+
+# いつ動くか？ → PRが作られたとき、コードが更新されたとき
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+# どんな権限が必要か？
+permissions:
+  contents: read          # コードを読む権限
+  pull-requests: write    # PRにコメントを書く権限
+
+jobs:
+  review:
+    # ドラフトPRはスキップ（まだ作業中だから）
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    steps:
+      # ステップ1: リポジトリのコードを取得
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 全履歴を取得（差分比較に必要）
+
+      # ステップ2: Claudeにレビューさせる
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            このPRの変更内容をレビューしてください。
+            以下の観点でチェックして、日本語でコメントしてください：
+
+            1. バグや論理エラーがないか
+            2. セキュリティ上の問題はないか
+            3. パフォーマンスの懸念はないか
+            4. コードの読みやすさ・保守性
+            5. CLAUDE.mdのコーディング規約に沿っているか
+
+            問題がなければ「LGTMs（Looks Good To Me）」と書いてください。
+            問題がある場合は、具体的な修正案をコード付きで提示してください。
+          claude_args: "--max-turns 5"

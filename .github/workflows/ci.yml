@@ -1,0 +1,34 @@
+# ============================================
+# ✅ テスト・lint 自動実行
+# PRごとにコードの品質チェックとテストを自動で行う
+# ============================================
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node.js セットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: パッケージインストール
+        run: npm ci
+
+      - name: lint チェック
+        run: npm run lint
+
+      - name: 型チェック
+        run: npx tsc --noEmit
+
+      - name: テスト実行
+        run: npm run test -- --run

@@ -1,0 +1,14 @@
+あなたはNext.js 15とTypeScriptのエキスパートです。
+
+このプロジェクトはリアルタイムコラボツール「CollabCanvas」です。
+react-konvaでキャンバス描画、Liveblocksでリアルタイム同期を行います。
+
+コード生成ルール:
+- TypeScript strictモードに準拠
+- any型は絶対に使わない
+- Server ComponentとClient Componentを明確に分離
+- "use client"は必要最小限に
+- Tailwind CSSのユーティリティクラスを使用
+- コンポーネントはアロー関数で定義
+- エラーバウンダリとSuspenseを適切に配置
+- 日本語コメントOK、変数名は英語

@@ -1,65 +1,104 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Plus, LayoutGrid } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/lib/button-variants";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { DashboardShell } from "@/components/layout/DashboardShell";
+import { PageTransition } from "@/components/layout/PageTransition";
 
-export default function Home() {
+// モックデータ（後でAPIから取得）
+const mockBoards = [
+  {
+    id: "1",
+    title: "プロジェクト計画",
+    description: "Q2ロードマップ",
+    updatedAt: "2時間前",
+    color: "from-blue-500/20 to-indigo-500/10",
+  },
+  {
+    id: "2",
+    title: "デザインレビュー",
+    description: "UIコンポーネント整理",
+    updatedAt: "昨日",
+    color: "from-violet-500/20 to-purple-500/10",
+  },
+  {
+    id: "3",
+    title: "チームブレスト",
+    description: "新機能アイデア出し",
+    updatedAt: "3日前",
+    color: "from-emerald-500/20 to-teal-500/10",
+  },
+];
+
+export default function DashboardPage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <DashboardShell>
+      <PageTransition className="p-8">
+        {/* ヘッダー行 */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">マイボード</h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              ボードを管理・編集できます
+            </p>
+          </div>
+          <Link
+            href="/board/new"
+            className={cn(buttonVariants({ size: "sm" }), "gap-2")}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <Plus className="h-4 w-4" />
+            新規作成
+          </Link>
         </div>
-      </main>
-    </div>
+
+        {/* ボード一覧 */}
+        {mockBoards.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <LayoutGrid className="h-12 w-12 text-muted-foreground mb-4" />
+            <h2 className="text-lg font-medium mb-1">ボードがありません</h2>
+            <p className="text-muted-foreground text-sm mb-5">
+              最初のボードを作成して始めましょう
+            </p>
+            <Link
+              href="/board/new"
+              className={cn(buttonVariants({ size: "sm" }), "gap-2")}
+            >
+              <Plus className="h-4 w-4" />
+              新規作成
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {mockBoards.map((board) => (
+              <Link key={board.id} href={`/board/${board.id}`}>
+                <Card className="hover:shadow-md transition-all hover:-translate-y-0.5 cursor-pointer group">
+                  {/* サムネイルエリア */}
+                  <div
+                    className={cn(
+                      "mx-4 mt-0 aspect-video rounded-lg bg-gradient-to-br flex items-center justify-center",
+                      board.color
+                    )}
+                  >
+                    <LayoutGrid className="h-8 w-8 text-foreground/20 group-hover:text-foreground/35 transition-colors" />
+                  </div>
+                  <CardHeader className="pt-2 pb-1">
+                    <CardTitle>{board.title}</CardTitle>
+                    <CardDescription>
+                      {board.description} · {board.updatedAt}
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        )}
+      </PageTransition>
+    </DashboardShell>
   );
 }
