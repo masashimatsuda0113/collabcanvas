@@ -11,7 +11,7 @@ interface NoteState {
   bringToFront: (id: string) => void;
 }
 
-export const useNoteStore = create<NoteState>((set, get) => ({
+export const useNoteStore = create<NoteState>((set) => ({
   notes: [],
 
   addNote: (x, y, colorIndex = 0) => {
